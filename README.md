@@ -1,4 +1,4 @@
-# Solar Shadow Analysis Web Application
+# Solar Shadow Analysis 3D Web Application
 
 An interactive **3D web application** that simulates a solar installation site and analyses
 how surrounding structures (buildings and water tanks) shade the solar tables, then estimates
