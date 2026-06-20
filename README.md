@@ -14,7 +14,7 @@ metric.
 
 > Deploy the `client/` folder to Vercel (set the project's **root directory** to `client`) and paste the URL here:
 >
-> **Deployed app:** `https://<your-deployment>.vercel.app`
+> **Deployed app:** `https://solar-grid-analysis-system.vercel.app/`
 
 The app is fully client-side, so it deploys to Vercel/Netlify with **no backend or environment
 variables required**.
@@ -126,14 +126,6 @@ SolarGridProject/
       ├─ models/          # data access (raw SQL per table)
       ├─ utils/           # http helpers, token, validation, sun resolution
       └─ analysis/        # SAME shadow/efficiency engine as the frontend
-```
-
-**Request flow** (classic layered architecture):
-
-```
-HTTP → routes/ → middleware (auth) → controllers/ → services/ → models/ → MySQL
-                                          │              │
-                                    req/res only    business logic
 ```
 
 Each layer has one job: a **route** maps a URL to a handler, a **controller** reads the
