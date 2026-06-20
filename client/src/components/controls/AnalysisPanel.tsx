@@ -32,7 +32,6 @@ String penalty: ${(p.stringPenalty * 100).toFixed(0)}%`}
 }
 
 function TableCard({ t, index }: { t: TableAnalysis; index: number }) {
-  // panels are ordered row-major (row 0 cols 0..2, row 1 cols 0..2)
   return (
     <div className="bg-slate-800/60 rounded-lg p-3 mb-3">
       <div className="flex justify-between items-center mb-2">
@@ -66,7 +65,6 @@ function Metric({ label, value }: { label: string; value: string }) {
   );
 }
 
-/** Bonus: average efficiency across the daylight hours of the selected date. */
 function useDailySummary() {
   const objects = useAppSelector((s) => s.scene.objects);
   const { date, latitude, longitude } = useAppSelector((s) => s.sun);

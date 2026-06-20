@@ -18,7 +18,6 @@ import { sunAnglesFromDateTime, sunDirection, isSunUp } from '@/lib/sun';
 import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/lib/constants';
 import { SceneObject } from '@/types';
 
-// Reference sun used for the report column: 21 June, 13:00, default location.
 const REF = sunAnglesFromDateTime('2026-06-21', 13 * 60, DEFAULT_LATITUDE, DEFAULT_LONGITUDE);
 
 function composition(objs: SceneObject[]) {
@@ -29,7 +28,6 @@ function composition(objs: SceneObject[]) {
   };
 }
 
-/** Average table score at the reference sun position (a quick "report" value). */
 function referenceScore(objs: SceneObject[]): number | null {
   const dir = sunDirection(REF.azimuth, REF.elevation);
   const res = analyseScene(objs, dir, isSunUp(REF.elevation), 13 * 60);

@@ -4,7 +4,6 @@ import dynamic from 'next/dynamic';
 import ControlPanel from '@/components/controls/ControlPanel';
 import PlaybackDriver from '@/components/PlaybackDriver';
 
-// The 3D canvas depends on the browser (WebGL), so render it client-side only.
 const SceneCanvas = dynamic(() => import('@/components/scene/SceneCanvas'), {
   ssr: false,
   loading: () => (
