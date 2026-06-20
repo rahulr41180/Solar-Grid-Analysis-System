@@ -1,4 +1,3 @@
-// Business logic for presets.
 import { parseJson } from '../config/db';
 import { SceneObject } from '../analysis/types';
 import { listPresets as listPresetRows } from '../models/presetModel';

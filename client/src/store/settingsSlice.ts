@@ -1,11 +1,8 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 export interface SettingsState {
-  /** Tint panels by their performance score. */
   heatmap: boolean;
-  /** Render real-time shadow maps in the 3D scene. */
   showShadows: boolean;
-  /** Show a translucent ray from each table to the sun. */
   showSunRays: boolean;
 }
 

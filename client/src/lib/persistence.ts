@@ -1,15 +1,3 @@
-// ---------------------------------------------------------------------------
-// Scene persistence.
-//
-// WRITE strategy: every save is written to BOTH localStorage and (when the
-// backend is configured) the Express + MySQL API. The DB write is best-effort —
-// if it fails, the localStorage save still succeeds, so the app keeps working.
-//
-// READ strategy: controlled by `sceneReadSource()`.
-//   - Default 'local'  → lists/loads come from localStorage (current behaviour).
-//   - Set NEXT_PUBLIC_SCENE_SOURCE=db (once DB credentials are configured) to
-//     read from the database instead. Writes still go to both sides regardless.
-// ---------------------------------------------------------------------------
 
 import { SceneObject } from '@/types';
 import {
@@ -28,18 +16,14 @@ export interface SavedScene {
   savedAt: number;
 }
 
-/** Where list/load reads come from right now. */
 export function sceneReadSource(): 'local' | 'db' {
   const wantsDb = process.env.NEXT_PUBLIC_SCENE_SOURCE === 'db';
   return wantsDb && apiEnabled() ? 'db' : 'local';
 }
 
-/** Whether the backend is reachable (used to decide DB dual-writes). */
 export function isBackendActive(): boolean {
   return apiEnabled();
 }
-
-// ---- localStorage helpers --------------------------------------------------
 
 function readAll(): SavedScene[] {
   if (typeof window === 'undefined') return [];
@@ -54,8 +38,6 @@ function writeAll(scenes: SavedScene[]) {
   window.localStorage.setItem(KEY, JSON.stringify(scenes));
 }
 
-// ---- DB (best-effort) ------------------------------------------------------
-
 async function dbSave(name: string, objects: SceneObject[]) {
   const existing = (await apiListScenes()).find((s) => s.name === name);
   if (existing) await apiUpdateScene(existing.id, { objects });
@@ -67,15 +49,11 @@ async function dbDelete(name: string) {
   if (found) await apiDeleteScene(found.id);
 }
 
-// ---- Public async interface ------------------------------------------------
-
 export async function saveScene(name: string, objects: SceneObject[]): Promise<void> {
-  // 1) localStorage (source of truth for now)
   const scenes = readAll().filter((s) => s.name !== name);
   scenes.push({ name, objects, savedAt: Date.now() });
   writeAll(scenes);
 
-  // 2) database (best-effort — never blocks the local save)
   if (apiEnabled()) {
     try {
       await dbSave(name, objects);
@@ -107,9 +85,7 @@ export async function loadSceneByName(name: string): Promise<SceneObject[] | nul
 }
 
 export async function deleteScene(name: string): Promise<void> {
-  // remove locally
   writeAll(readAll().filter((s) => s.name !== name));
-  // and from the database (best-effort)
   if (apiEnabled()) {
     try {
       await dbDelete(name);

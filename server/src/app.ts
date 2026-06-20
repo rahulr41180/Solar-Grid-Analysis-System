@@ -15,7 +15,6 @@ export function createApp() {
   app.use(
     cors({
       origin: (origin, cb) => {
-        // allow non-browser tools (curl/Postman) with no Origin header
         if (!origin || env.corsOrigins.includes(origin)) return cb(null, true);
         cb(new Error(`Origin ${origin} not allowed by CORS`));
       },
@@ -29,7 +28,6 @@ export function createApp() {
   app.use('/api/presets', presetsRoutes);
   app.use('/api/analyze', analyzeRoutes);
   app.use('/api/share', shareRoutes);
-  // Both scene CRUD and the nested analysis routes live under /api/scenes.
   app.use('/api/scenes', scenesRoutes);
   app.use('/api/scenes', analysesRoutes);
 

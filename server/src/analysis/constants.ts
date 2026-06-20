@@ -1,4 +1,3 @@
-// Fixed physical constants for the solar installation (mirrors the frontend).
 
 export const PANEL_TILT_DEG = 15;
 export const PANEL_TILT_RAD = (PANEL_TILT_DEG * Math.PI) / 180;

@@ -1,5 +1,3 @@
-// Seeds the `presets` table with a few example sites.
-// Run with: npm run seed
 import crypto from 'crypto';
 import { pool } from '../config/db';
 import { SceneObject } from '../analysis/types';

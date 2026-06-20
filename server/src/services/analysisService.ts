@@ -1,4 +1,3 @@
-// Business logic for analysis: stateless compute, snapshots, daily aggregation, CSV.
 import { parseJson } from '../config/db';
 import { badRequest } from '../utils/http';
 import { resolveSun } from '../utils/resolveSun';
@@ -12,7 +11,6 @@ import { createAnalysis, listAnalysesByScene } from '../models/analysisModel';
 
 type Body = Record<string, unknown>;
 
-/** Stateless: analyse arbitrary objects + sun, nothing stored. */
 export function runStateless(body: Body) {
   const objects = validateSceneObjects(body.objects);
   const sun = resolveSun(body);
@@ -20,7 +18,6 @@ export function runStateless(body: Body) {
   return { sun: { azimuth: sun.azimuth, elevation: sun.elevation }, result };
 }
 
-/** Compute an analysis for a stored scene and persist it. */
 export async function storeSnapshot(userId: number | undefined, sceneId: string, body: Body) {
   const scene = await loadOwnedScene(userId, sceneId);
   const objects = sceneObjects(scene);
@@ -36,7 +33,6 @@ export async function storeSnapshot(userId: number | undefined, sceneId: string,
   return { id, sun: { azimuth: sun.azimuth, elevation: sun.elevation }, result };
 }
 
-/** Stored analysis history for a scene. */
 export async function listForScene(userId: number | undefined, sceneId: string) {
   await loadOwnedScene(userId, sceneId);
   const rows = await listAnalysesByScene(sceneId);
@@ -50,7 +46,6 @@ export async function listForScene(userId: number | undefined, sceneId: string) 
   }));
 }
 
-/** Aggregate efficiency across a day's daylight hours and persist a summary. */
 export async function runDaily(userId: number | undefined, sceneId: string, body: Body) {
   const scene = await loadOwnedScene(userId, sceneId);
   const objects = sceneObjects(scene);
@@ -91,7 +86,6 @@ export async function runDaily(userId: number | undefined, sceneId: string, body
   return summary;
 }
 
-/** Build a per-panel CSV report for a scene at a given sun position. */
 export async function buildCsv(
   userId: number | undefined,
   sceneId: string,

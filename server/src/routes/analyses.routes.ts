@@ -3,7 +3,6 @@ import { asyncHandler } from '../utils/http';
 import { optionalAuth } from '../middleware/auth';
 import * as analysisController from '../controllers/analysisController';
 
-// Mounted under /api/scenes (alongside scenes.routes).
 const router = Router();
 
 router.get('/:id/analyses', optionalAuth, asyncHandler(analysisController.listForScene));

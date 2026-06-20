@@ -1,4 +1,3 @@
-// Business logic for authentication.
 import bcrypt from 'bcryptjs';
 import { createUser, findUserByEmail } from '../models/userModel';
 import { signToken } from '../utils/token';

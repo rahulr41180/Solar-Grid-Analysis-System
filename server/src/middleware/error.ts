@@ -10,7 +10,6 @@ export function errorHandler(err: unknown, _req: Request, res: Response, _next: 
   if (err instanceof HttpError) {
     return res.status(err.status).json({ error: err.message });
   }
-  // Duplicate-key (e.g. email already registered)
   if (typeof err === 'object' && err && (err as { code?: string }).code === 'ER_DUP_ENTRY') {
     return res.status(409).json({ error: 'Resource already exists' });
   }

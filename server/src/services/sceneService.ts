@@ -1,4 +1,3 @@
-// Business logic for scenes (validation, ownership, serialisation).
 import crypto from 'crypto';
 import { parseJson } from '../config/db';
 import { badRequest, forbidden, notFound } from '../utils/http';
@@ -38,7 +37,6 @@ function toDto(row: SceneRow): SceneDto {
   };
 }
 
-/** Load a scene and enforce ownership. Anonymous scenes (null user) are open. */
 export async function loadOwnedScene(
   userId: number | undefined,
   id: string | number
@@ -50,7 +48,6 @@ export async function loadOwnedScene(
   return row;
 }
 
-/** Scene objects for a loaded row (used by the analysis service). */
 export function sceneObjects(row: SceneRow): SceneObject[] {
   return parseJson<SceneObject[]>(row.data);
 }

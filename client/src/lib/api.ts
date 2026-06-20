@@ -1,10 +1,3 @@
-// ---------------------------------------------------------------------------
-// Thin client for the optional Express + MySQL backend.
-//
-// Enabled only when NEXT_PUBLIC_API_URL is set (e.g. http://localhost:4000).
-// When unset, the app runs fully frontend-only and persistence falls back to
-// localStorage (see lib/persistence.ts).
-// ---------------------------------------------------------------------------
 
 import { SceneObject } from '@/types';
 
@@ -44,8 +37,6 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
   return res.json() as Promise<T>;
 }
 
-// ---- Types mirrored from the backend responses ----------------------------
-
 export interface ApiScene {
   id: number;
   userId: number | null;
@@ -62,8 +53,6 @@ export interface ApiPreset {
   description: string | null;
   objects: SceneObject[];
 }
-
-// ---- Auth ------------------------------------------------------------------
 
 export async function register(email: string, password: string) {
   const out = await request<{ token: string; user: { id: number; email: string } }>(
@@ -90,8 +79,6 @@ export function logout() {
 export function isLoggedIn(): boolean {
   return typeof window !== 'undefined' && !!window.localStorage.getItem(TOKEN_KEY);
 }
-
-// ---- Scenes ----------------------------------------------------------------
 
 export async function apiListScenes(): Promise<ApiScene[]> {
   const out = await request<{ scenes: ApiScene[] }>('/api/scenes');
@@ -125,14 +112,10 @@ export async function apiShareScene(id: number): Promise<{ shareToken: string; u
   return request(`/api/scenes/${id}/share`, { method: 'POST' });
 }
 
-// ---- Presets ---------------------------------------------------------------
-
 export async function apiListPresets(): Promise<ApiPreset[]> {
   const out = await request<{ presets: ApiPreset[] }>('/api/presets');
   return out.presets;
 }
-
-// ---- Analysis --------------------------------------------------------------
 
 export interface SunInput {
   azimuth?: number;

@@ -1,4 +1,3 @@
--- Solar Grid backend schema (MySQL 8+)
 
 CREATE TABLE IF NOT EXISTS users (
   id            INT AUTO_INCREMENT PRIMARY KEY,

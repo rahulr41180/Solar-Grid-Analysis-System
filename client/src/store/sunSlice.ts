@@ -4,7 +4,7 @@ import { DEFAULT_LATITUDE, DEFAULT_LONGITUDE } from '@/lib/constants';
 import { sunAnglesFromDateTime } from '@/lib/sun';
 
 const initialDate = '2026-06-21';
-const initialMinutes = 13 * 60; // 1:00 PM
+const initialMinutes = 13 * 60; 
 
 const initialAngles = sunAnglesFromDateTime(
   initialDate,
@@ -24,7 +24,6 @@ const initialState: SunState = {
   playing: false,
 };
 
-/** Recompute azimuth/elevation from the current datetime inputs. */
 function recompute(state: SunState) {
   const a = sunAnglesFromDateTime(state.date, state.minutes, state.latitude, state.longitude);
   state.azimuth = a.azimuth;
@@ -66,7 +65,6 @@ const sunSlice = createSlice({
       if (state.playing) state.mode = 'datetime';
     },
     tickPlayback: (state, action: PayloadAction<number>) => {
-      // advance time by `action.payload` minutes, looping over the day
       let m = state.minutes + action.payload;
       if (m >= 24 * 60) m = 0;
       state.minutes = m;

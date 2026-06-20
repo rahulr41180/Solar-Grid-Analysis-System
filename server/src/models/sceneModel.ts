@@ -1,4 +1,3 @@
-// Data access for the `scenes` table.
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { pool } from '../config/db';
 
@@ -6,7 +5,7 @@ export interface SceneRow extends RowDataPacket {
   id: number;
   user_id: number | null;
   name: string;
-  data: unknown; // JSON column (scene-object array)
+  data: unknown; 
   share_token: string | null;
   created_at: string;
   updated_at: string;

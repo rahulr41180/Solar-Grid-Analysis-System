@@ -3,7 +3,6 @@ import { badRequest } from './http';
 
 const TYPES = new Set(['building', 'tank', 'table']);
 
-/** Lightweight validation of an incoming scene-objects array. */
 export function validateSceneObjects(input: unknown): SceneObject[] {
   if (!Array.isArray(input)) throw badRequest('`objects` must be an array');
   for (const o of input) {

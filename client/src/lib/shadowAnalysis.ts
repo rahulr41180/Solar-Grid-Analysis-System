@@ -1,25 +1,3 @@
-// ---------------------------------------------------------------------------
-// Shadow + efficiency analysis.
-//
-// METHODOLOGY (documented in README):
-//   For each panel we lay a SAMPLE_ROWS x SAMPLE_COLS grid of points across its
-//   surface. From each point we cast a ray toward the sun and test whether any
-//   occluder (building cuboid or tank cylinder) blocks it. The fraction of
-//   blocked samples is the panel's shaded fraction.
-//
-//   Because panel cells are wired in SERIES strings, *where* the shadow falls
-//   matters as much as how much: a shadow spanning a whole string can throttle
-//   the entire string via its bypass diode. We therefore compute, in addition
-//   to the raw shaded fraction:
-//     - stringPenalty: how concentrated the shading is along the worst series
-//       row, beyond what a uniform shadow of the same area would cause.
-//     - EOF (Edge Occlusion Factor): shaded fraction within the panel's
-//       perimeter band -- a sentinel for occlusion creeping in from adjacent
-//       structures.
-//
-//   These feed a transparent efficiency model producing an effective
-//   irradiance factor, a 0..100 score, and a classification band.
-// ---------------------------------------------------------------------------
 
 import * as THREE from 'three';
 import {
@@ -44,9 +22,6 @@ import { panelLayouts, panelSamplePoints } from './geometry';
 const EPS = 1e-3;
 const RAY_MAX = 1e4;
 
-// ---- Ray / occluder intersection ------------------------------------------
-
-/** Ray vs axis-aligned box (building). Returns true if the ray hits in front. */
 function rayHitsBuilding(
   origin: THREE.Vector3,
   dir: THREE.Vector3,
@@ -78,7 +53,6 @@ function rayHitsBuilding(
   return tmax >= tmin && tmax > EPS;
 }
 
-/** Ray vs finite vertical cylinder (tank). Returns true if the ray hits in front. */
 function rayHitsTank(origin: THREE.Vector3, dir: THREE.Vector3, t: Tank): boolean {
   const cx = t.x;
   const cz = t.y;
@@ -86,7 +60,6 @@ function rayHitsTank(origin: THREE.Vector3, dir: THREE.Vector3, t: Tank): boolea
   const yBot = 0;
   const yTop = t.height;
 
-  // Side surface: solve in the XZ plane.
   const ox = origin.x - cx;
   const oz = origin.z - cz;
   const a = dir.x * dir.x + dir.z * dir.z;
@@ -105,7 +78,6 @@ function rayHitsTank(origin: THREE.Vector3, dir: THREE.Vector3, t: Tank): boolea
     }
   }
 
-  // End caps.
   if (Math.abs(dir.y) > 1e-9) {
     for (const capY of [yBot, yTop]) {
       const tt = (capY - origin.y) / dir.y;
@@ -130,8 +102,6 @@ function isShaded(
   return false;
 }
 
-// ---- Efficiency model ------------------------------------------------------
-
 function classify(score: number): PanelClass {
   if (score >= CLASS_THRESHOLDS.Optimal) return 'Optimal';
   if (score >= CLASS_THRESHOLDS.Good) return 'Good';
@@ -139,10 +109,6 @@ function classify(score: number): PanelClass {
   return 'Critical';
 }
 
-/**
- * Analyse a single panel given its shaded-sample boolean grid.
- * grid[r][c] = true if that sample is in shadow.
- */
 function analysePanel(
   table: SolarTable,
   layout: { panelIndex: number; row: number; col: number },
@@ -177,12 +143,9 @@ function analysePanel(
   const shadedFraction = shaded / total;
   const eof = edgeTotal > 0 ? edgeShaded / edgeTotal : 0;
 
-  // Series-string concentration: the worst row limits its string's current.
   const worstRow = rowShaded.reduce((m, v) => Math.max(m, v), 0);
   const stringPenalty = Math.max(0, worstRow - shadedFraction);
 
-  // Effective irradiance factor. Geometric loss + concentration loss + a small
-  // edge-occlusion contribution (EOF acts on the shaded area already present).
   const loss =
     shadedFraction +
     CONCENTRATION_ALPHA * stringPenalty +
@@ -221,8 +184,6 @@ function aggregateTable(tableId: string, panels: PanelAnalysis[]): TableAnalysis
   };
 }
 
-// ---- Public entry point ----------------------------------------------------
-
 export function analyseScene(
   objects: SceneObject[],
   sunDir: [number, number, number],
@@ -250,10 +211,9 @@ export function analyseScene(
         const r = Math.floor(i / SAMPLE_COLS);
         const c = i % SAMPLE_COLS;
         if (!sunUp) {
-          grid[r][c] = true; // night: no direct sun
+          grid[r][c] = true;
           continue;
         }
-        // Back-face: if the sun is behind the panel it receives no direct light.
         if (samples[i].point && normal.dot(dir) <= 0) {
           grid[r][c] = true;
           continue;
@@ -274,10 +234,8 @@ export function analyseScene(
   };
 }
 
-/** Colour ramp (green -> yellow -> red) for a 0..100 score. */
 export function scoreColor(score: number): string {
   const t = Math.max(0, Math.min(1, score / 100));
-  // interpolate red->yellow->green
   let r: number;
   let g: number;
   if (t < 0.5) {

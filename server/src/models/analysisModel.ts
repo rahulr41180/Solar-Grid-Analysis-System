@@ -1,4 +1,3 @@
-// Data access for the `analyses` table.
 import { RowDataPacket, ResultSetHeader } from 'mysql2';
 import { pool } from '../config/db';
 

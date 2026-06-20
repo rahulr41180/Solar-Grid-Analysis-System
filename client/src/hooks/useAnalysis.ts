@@ -4,7 +4,6 @@ import { analyseScene, scoreColor } from '@/lib/shadowAnalysis';
 import { sunDirection, isSunUp } from '@/lib/sun';
 import { AnalysisResult } from '@/types';
 
-/** Derive sun direction + full scene analysis, memoised on the relevant state. */
 export function useSunDirection(): { dir: [number, number, number]; up: boolean } {
   const { azimuth, elevation } = useAppSelector((s) => s.sun);
   return useMemo(
@@ -24,7 +23,6 @@ export function useAnalysis(): AnalysisResult {
   );
 }
 
-/** Map of tableId -> panelIndex -> score, for fast heatmap lookups. */
 export function useScoreMap(result: AnalysisResult) {
   return useMemo(() => {
     const map = new Map<string, number[]>();

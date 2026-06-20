@@ -1,4 +1,3 @@
-// Solar table geometry (mirrors the frontend lib/geometry.ts).
 import * as THREE from 'three';
 import { SolarTable } from './types';
 import {

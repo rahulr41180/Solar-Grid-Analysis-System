@@ -5,7 +5,6 @@ import { pool } from './config/db';
 async function main() {
   const app = createApp();
 
-  // Fail fast if the database is unreachable.
   try {
     const conn = await pool.getConnection();
     await conn.ping();

@@ -10,11 +10,6 @@ export interface ResolvedSun {
   minutes: number;
 }
 
-/**
- * Resolve a sun position from a request body. Accepts either:
- *   - manual:   { azimuth, elevation }
- *   - datetime: { date, minutes, latitude?, longitude? }
- */
 export function resolveSun(body: Record<string, unknown>): ResolvedSun {
   const hasManual =
     typeof body.azimuth === 'number' && typeof body.elevation === 'number';

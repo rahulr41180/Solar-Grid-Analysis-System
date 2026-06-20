@@ -1,5 +1,3 @@
-// Creates the database (if needed) and applies schema.sql.
-// Run with: npm run migrate
 import fs from 'fs';
 import path from 'path';
 import { env } from '../config/env';

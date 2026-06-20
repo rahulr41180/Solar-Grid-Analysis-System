@@ -1,4 +1,3 @@
-// Shadow + efficiency analysis (mirrors the frontend lib/shadowAnalysis.ts).
 import * as THREE from 'three';
 import {
   AnalysisResult,

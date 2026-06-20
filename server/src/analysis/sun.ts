@@ -1,12 +1,11 @@
-// Solar position helpers (mirrors the frontend lib/sun.ts).
 import SunCalc from 'suncalc';
 
 const RAD2DEG = 180 / Math.PI;
 const DEG2RAD = Math.PI / 180;
 
 export interface SunAngles {
-  azimuth: number; // compass deg: 0=N, 90=E, 180=S, 270=W
-  elevation: number; // deg above horizon
+  azimuth: number; 
+  elevation: number;
 }
 
 export function sunAnglesFromDateTime(
