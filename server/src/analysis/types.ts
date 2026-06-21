@@ -1,6 +1,3 @@
-// Domain types shared with the frontend (kept in sync intentionally).
-// Coordinate convention (Three.js, Y-up): +X=East, +Z=South, +Y=Up.
-
 export type ObjectType = 'building' | 'tank' | 'table';
 
 export interface BaseObject {
